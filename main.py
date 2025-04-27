@@ -57,13 +57,16 @@ def test_function(coords,objects,nitems):
     return perm_price,perm_size
 
 def generate_neighbor(center_point,item_count):
-    neighbor = []
-    for item in center_point:
-        chance = random.random()
-        if chance > 1/len(center_point):
-            neighbor.append(random.randint(0, item_count-1))
-        else:
-            neighbor.append(item)
+    while True:
+        neighbor = []
+        for item in center_point:
+            chance = random.random()
+            if chance > 1/len(center_point):
+                neighbor.append(random.randint(0, item_count-1))
+            else:
+                neighbor.append(item)
+        if center_point != neighbor:
+            break
     return neighbor
 
 def localsearch_best_permutation(objects, permutations, item_count, max_iterations):
@@ -78,5 +81,5 @@ if __name__ == '__main__':
     # bruteforce_best_permutation(generated_objects, possible_permutations,item_count)
     # print(test_function((0,1,0,2,2),generated_objects,item_count))
 
-    test_center = [1,2,0,1,2,1,0,0,2]
+    test_center = [1,2,0]
     print(generate_neighbor(test_center,3))
