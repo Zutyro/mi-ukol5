@@ -2,6 +2,8 @@ import random
 import itertools
 import datetime
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 def generate_objects(nclasses,nitems):
     objects = []
@@ -94,15 +96,10 @@ def localsearch_best_permutation(objects, item_count, max_iterations, population
                     best_point = coords
         center_point = best_point
         center_result = best_result
-        if len(convergence_results) == 0:
-            convergence_results.append(best_result)
-        elif convergence_results[len(convergence_results) - 1] > best_result:
-            convergence_results.append(best_result)
-        else:
-            convergence_results.append(convergence_results[len(convergence_results) - 1])
+        convergence_results.append(best_result)
     end_time = datetime.datetime.now()
     duration = (end_time - start_time).total_seconds()
-    print(f'Calculation duration: {duration} s')
+    print(f'Calculation duration: {duration} s \nFor {item_count} items and {int((len(objects) / item_count))} classes')
     best_permutation_objects = [[i+1,item+1,objects[i * item_count + item][2],objects[i * item_count + item][3]] for i,item in enumerate(best_point)]
     row_labels = ['Trida', 'Id', 'Objem', 'Cena']
     plt.table(cellText=best_permutation_objects, colLabels=row_labels, loc='center')
@@ -120,4 +117,7 @@ if __name__ == '__main__':
     # possible_permutations = generate_all_permutations(class_count,item_count)
     # bruteforce_best_permutation(generated_objects, possible_permutations,item_count)
 
-    localsearch_best_permutation(generated_objects,item_count,1000,5)
+    convergence = localsearch_best_permutation(generated_objects,item_count,10000,5)
+    swapped_convergence = np.transpose(convergence,axes=[1,0])
+    plt.plot(swapped_convergence[0])
+    plt.show()
